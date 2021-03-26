@@ -79,17 +79,8 @@ type Entity implements Basic {
   valid_until: String
   registered_address: [Address]
     @cypher(
-      statement: "MATCH (this)-[:REGISTERED_ADDRESS]->(a:Address) RETURN a"
+      statement: "MATCH (this)-[:registered_address]->(a:Address) RETURN a"
     )
-}
-
-type Intermediary implements Basic {
-  node_id: ID!
-  name: String!
-  sourceID: String
-  valid_until: String
-  connected_to: [Entity]
-    @cypher(statement: "MATCH (this)-[:CONNECTED_TO]->(e:Entity) RETURN e")
 }
 
 type Other implements Basic {
@@ -97,17 +88,26 @@ type Other implements Basic {
   name: String!
   sourceID: String
   valid_until: String
+  connected_to: [Entity]
+    @cypher(statement: "MATCH (this)-[:connected_to]->(e:Entity) RETURN e")
+}
+
+type Intermediary implements Basic {
+  node_id: ID!
+  name: String!
+  sourceID: String
+  valid_until: String
   officer_of: [Entity]
-    @cypher(statement: "MATCH (this)-[r:OFFICER_OF]->(e:Entity) RETURN e")
+    @cypher(statement: "MATCH (this)-[r:officer_of]->(e:Entity) RETURN e")
   intermediary_of: [Entity]
-    @cypher(statement: "MATCH (this)-[r:INTERMEDIARY_OF]->(e:Entity) RETURN e")
+    @cypher(statement: "MATCH (this)-[r:intermediary_of]->(e:Entity) RETURN e")
   registered_address: [Address]
     @cypher(
-      statement: "MATCH (this)-[:REGISTERED_ADDRESS]->(a:Address) RETURN a"
+      statement: "MATCH (this)-[:registered_address]->(a:Address) RETURN a"
     )
 }
 
-union Company = Entity | Other
+union Company = Entity | Intermediary
 
 type Officer {
   node_id: ID!
@@ -118,10 +118,15 @@ type Officer {
   valid_until: String
   registered_address: [Address]
     @cypher(
-      statement: "MATCH (this)-[r:REGISTERED_ADDRESS]->(a:Address) RETURN a"
+      statement: "MATCH (this)-[r:registered_address]->(a:Address) RETURN a"
     )
   officer_of: [Company]
-    @cypher(statement: "MATCH (this)-[r:OFFICER_OF]->(e) RETURN e")
+    @cypher(statement: "MATCH (this)-[r:officer_of]->(e) RETURN e")
+}
+
+type RatingData {
+  name: String!
+  count: Int!
 }
 
 type Mutation {
@@ -137,10 +142,29 @@ type Query {
     @cypher(
       statement: "MATCH (r:Review) WITH r.stars AS stars, COUNT(*) AS count ORDER BY stars RETURN {stars: stars, count: count}"
     )
-  activeIntermediaryCompanies: [Other]
+
+  popularJurisdiction: [RatingData]
     @cypher(
-      statement: "MATCH (o:Other)-[r:INTERMEDIARY_OF]->(e:Entity) RETURN o"
+      statement: "MATCH (e:Entity) WITH e.jurisdiction_description AS name, count(*) AS count ORDER BY count DESC RETURN {name: name, count: count}"
     )
-  activeOfficerCompanies: [Other]
-    @cypher(statement: "MATCH (o:Other)-[r:OFFICER_OF]->(e:Entity) RETURN o")
+  popularCountries: [RatingData]
+    @cypher(
+      statement: "MATCH (e:Entity) WITH e.country_codes AS name,e.countries AS desc, count(*) AS count ORDER BY count DESC RETURN {name: desc, count: count}"
+    )
+  popularOfficers: [RatingData]
+    @cypher(
+      statement: "MATCH (o:Officer)-[:officer_of]-(e:Entity) WITH o.name as name, count(*) as count ORDER BY count DESC RETURN {name: name, count: count}"
+    )
+  activeIntermediaryCompanies: [Intermediary]
+    @cypher(
+      statement: "MATCH (i:Intermediary)-[r:intermediary_of]->(e:Entity) RETURN i"
+    )
+  activeOfficerCompanies: [Intermediary]
+    @cypher(
+      statement: "MATCH (i:Intermediary)-[r:officer_of]->(e:Entity) RETURN i"
+    )
+  bothOfficerAndIntermediary: [Intermediary]
+    @cypher(
+      statement: "MATCH (i:Intermediary)-[r:intermediary_of]->(e:Entity) RETURN i UNION MATCH (i2:Intermediary)-[r2:officer_of]->(e2:Entity) RETURN i2"
+    )
 }
