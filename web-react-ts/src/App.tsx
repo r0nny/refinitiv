@@ -176,7 +176,7 @@ export default function App() {
               noWrap
               className={classes.title}
             >
-              Welcome To GRANDstack App TS
+              Demo App powered by GRANDstack Neo4J Labs
             </Typography>
           </Toolbar>
         </AppBar>
