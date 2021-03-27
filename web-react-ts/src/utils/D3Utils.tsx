@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import * as d3 from 'd3'
-import { IHealth, IGraph, StageProps, SVGDatum, ZoomProps } from './interfaces'
+import { IGraph, StageProps, SVGDatum, ZoomProps } from './interfaces'
 import _ from 'lodash'
 import geojsonData from './countries-50m.json'
 

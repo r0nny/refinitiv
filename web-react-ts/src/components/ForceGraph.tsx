@@ -8,9 +8,6 @@ import {
   forceLink,
   scaleOrdinal,
   drag,
-  forceX,
-  forceY,
-  zoom,
   schemeCategory10,
 } from 'd3'
 import { svgStyle } from '../utils/D3Utils'

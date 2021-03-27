@@ -47,11 +47,6 @@ export interface IDimension {
   height: number
 }
 
-export interface IHealth {
-  country: string
-  hale: string
-}
-
 export interface IRating {
   name: string
   count: number
