@@ -1,7 +1,6 @@
 import React, { useRef, useEffect } from 'react'
 import {
   select,
-  zoom,
   forceSimulation,
   forceManyBody,
   forceCollide,
@@ -9,20 +8,15 @@ import {
   forceLink,
   scaleOrdinal,
   drag,
+  forceX,
+  forceY,
+  zoom,
+  schemeCategory10,
 } from 'd3'
 import { svgStyle } from '../utils/D3Utils'
 import { IDimension, IGraph, INodes } from '../utils/interfaces'
 
-var color = scaleOrdinal([
-  '#66c2a5',
-  '#fc8d62',
-  '#8da0cb',
-  '#e78ac3',
-  '#a6d854',
-  '#ffd92f',
-  '#e5c494',
-  '#b3b3b3',
-])
+var color = scaleOrdinal(schemeCategory10)
 
 interface ForceGrapProps {
   data: IGraph
@@ -42,18 +36,18 @@ export default function ForceGraph(props: ForceGrapProps) {
     if (!dimensions?.width || !dimensions?.height) return
 
     // add zoom capability
-    const zoomBehavior = zoom()
-      .on('zoom', function (event: any) {
-        const { transform } = event
-        if (transform.k === 1) {
-          transform.x = 0
-          transform.y = 0
-        }
-        svg.attr('transform', transform)
-      })
-      .scaleExtent([1, 2])
+    // const zoomBehavior = zoom()
+    //   .on('zoom', function (event: any) {
+    //     const { transform } = event
+    //     if (transform.k === 1) {
+    //       transform.x = 0
+    //       transform.y = 0
+    //     }
+    //     svg.attr('transform', transform)
+    //   })
+    //   .scaleExtent([1, 4])
 
-    svg.call(zoomBehavior)
+    // svg.call(zoomBehavior)
 
     const { width, height } = dimensions
     const { nodes, links } = props.data
@@ -70,51 +64,38 @@ export default function ForceGraph(props: ForceGrapProps) {
     // draw nodes
     const node = svg
       .append('g')
-      .attr('class', 'node')
+      .attr('class', 'nodes')
       .selectAll('circle')
       .data(nodes)
       .enter()
+      .append('g')
+
+    const circles = node
       .append('circle')
       .attr('r', (d: any) => d.size + 20)
-      .attr('fill', (d: any) => color(d.id))
-      .attr('cx', (d: any) => d.x)
-      .attr('cy', (d: any) => d.y)
+      .attr('fill', (d: any) => color(d.type))
+      .call(
+        drag().on('start', dragstarted).on('drag', dragged).on('end', dragended)
+      )
 
-    const label = svg
-      .append('g')
-      .selectAll('text')
-      .data(nodes)
-      .enter()
+    const label = node
       .append('text')
-      .attr('fill', 'black')
-      .attr('x', (d: any) => d.x)
-      .attr('y', (d: any) => d.y)
       .text((d: INodes) => (d.label ? d.label : d.id))
-
-    node.call(
-      drag().on('start', dragstarted).on('drag', dragged).on('end', dragended)
-    )
+      .attr('fill', 'black')
+      .attr('dx', -10)
 
     // draw simulation
-    const simulation = forceSimulation(nodes)
-      .force('charge', forceManyBody().strength(30))
+    const simulation = forceSimulation()
+      .force('charge', forceManyBody().strength(-500))
       .force('center', forceCenter(width / 2, height / 2))
       .force(
-        'collision',
+        'collide',
         forceCollide()
-          .strength(0.5)
-          .radius(() => 25)
-      )
-      .force(
-        'link',
-        forceLink()
-          .links(links)
-          .id((d: any) => d.id)
-          .distance(150)
-          .strength(5)
+          .radius((d: any) => (d.size + 10) * -1)
+          .iterations(2)
       )
 
-    simulation.on('tick', () => {
+    simulation.nodes(nodes).on('tick', () => {
       // update links
       link
         .attr('x1', (d: any) => d.source.x)
@@ -123,16 +104,25 @@ export default function ForceGraph(props: ForceGrapProps) {
         .attr('y2', (d: any) => d.target.y)
 
       // update node
-      node.attr('cx', (d: any) => d.x).attr('cy', (d: any) => d.y)
+      circles
+        .attr('cx', (d: any) => {
+          return d.x
+        })
+        .attr('cy', (d: any) => d.y)
 
       // update text
-      label.attr('x', (d: any) => {
-        console.log(JSON.stringify(d))
-        return d.x
-      })
+      label.attr('x', (d: any) => d.x)
       label.attr('y', (d: any) => d.y)
-      label.attr('dx', (d: any) => -1 * d.size)
     })
+
+    simulation.force(
+      'link',
+      forceLink()
+        .links(links)
+        .id((d: any) => d.id)
+        .distance(100)
+        .strength(1)
+    )
 
     function dragstarted(event: any, d: any) {
       if (!event.active) simulation.alphaTarget(0.03).restart()
@@ -150,38 +140,7 @@ export default function ForceGraph(props: ForceGrapProps) {
       d.fx = null
       d.fy = null
     }
-    // const simulation = forceSimulation(nodeData)
-    //   .force(
-    //     'link',
-    //     forceLink(linkData)
-    //       .id((d: any) => d.id)
-    //       .distance(30)
-    //       .strength(1)
-    //   )
-    //   .force('charge', forceManyBody().strength(-50))
-    //   .force('collide', forceCollide(30))
-    // const simulation = forceSimulation()
-    //   .force(
-    //     'forceX',
-    //     forceX()
-    //       .strength(0.1)
-    //       .x(width * 0.5)
-    //   )
-    //   .force(
-    //     'forceY',
-    //     forceY()
-    //       .strength(0.1)
-    //       .y(height * 0.5)
-    //   )
-    //   .force(
-    //     'center',
-    //     forceCenter()
-    //       .x(width * 0.5)
-    //       .y(height * 0.5)
-    //   )
-    //   .force('charge', forceManyBody().strength(-15))
-    //   .stop()
-  }, [])
+  }, [props.data])
 
   return <svg ref={svgRef} style={svgStyle}></svg>
 }

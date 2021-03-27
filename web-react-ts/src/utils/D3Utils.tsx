@@ -1,23 +1,39 @@
 import React, { useEffect, useRef, useState } from 'react'
 import * as d3 from 'd3'
-import { IGraph, StageProps, SVGDatum, ZoomProps } from './interfaces'
+import { IHealth, IGraph, StageProps, SVGDatum, ZoomProps } from './interfaces'
 import _ from 'lodash'
+import geojsonData from './countries-50m.json'
+import hale from './hale.json'
 
 const SVGContext = React.createContext(null)
 
 export const circleData: number[] = [20, 40, 30, 50, 70, 30]
 
+export const worldData: any = geojsonData
+
+export const haleData: IHealth[] = hale
+
 export const graphData: IGraph = {
   nodes: [
-    { id: 'Alice', size: 10 },
-    { id: 'Bob', size: 20 },
-    { id: 'Carol', size: 40 },
-    { id: 'Dave', size: 20 },
+    { id: 'Alice', size: 10, group: 1, type: 'Officer' },
+    { id: 'Bob', size: 10, group: 1, type: 'Officer' },
+    { id: 'Carol', size: 30, group: 1, type: 'Entity' },
+    { id: 'Dave', size: 10, group: 1, type: 'Officer' },
+    { id: 'Eva', size: 10, group: 1, type: 'Officer' },
+    { id: 'Fan', size: 10, group: 1, type: 'Officer' },
+    { id: 'George', size: 10, group: 1, type: 'Officer' },
+    { id: 'H', size: 10, group: 2, type: 'Address' },
+    { id: 'I', size: 10, group: 2, type: 'Address' },
   ],
   links: [
-    { source: 'Alice', target: 'Bob' },
+    { source: 'Alice', target: 'Carol' },
     { source: 'Bob', target: 'Carol' },
     { source: 'Dave', target: 'Carol' },
+    { source: 'Eva', target: 'Carol' },
+    { source: 'Fan', target: 'Carol' },
+    { source: 'George', target: 'Carol' },
+    { source: 'H', target: 'George' },
+    { source: 'I', target: 'George' },
   ],
 }
 

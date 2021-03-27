@@ -147,13 +147,13 @@ type Query {
     @cypher(
       statement: "MATCH (e:Entity) WITH e.jurisdiction_description AS name, count(*) AS count ORDER BY count DESC RETURN {name: name, count: count}"
     )
-  popularCountries: [RatingData]
+  popularEntities: [RatingData]
     @cypher(
       statement: "MATCH (e:Entity) WITH e.country_codes AS name,e.countries AS desc, count(*) AS count ORDER BY count DESC RETURN {name: desc, count: count}"
     )
   popularOfficers: [RatingData]
     @cypher(
-      statement: "MATCH (o:Officer)-[:officer_of]-(e:Entity) WITH o.name as name, count(*) as count ORDER BY count DESC RETURN {name: name, count: count}"
+      statement: "MATCH (o:Officer)-[:officer_of]-(e:Entity) WITH o.countries as country, count(*) as count ORDER BY count DESC RETURN {name: country, count: count}"
     )
   activeIntermediaryCompanies: [Intermediary]
     @cypher(

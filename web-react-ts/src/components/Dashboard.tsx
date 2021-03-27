@@ -1,15 +1,15 @@
-import React, { useEffect, useRef } from 'react'
+import React from 'react'
 import { useTheme } from '@material-ui/core/styles'
 import { Grid, Paper } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import clsx from 'clsx'
 
 import RecentReviews from './RecentReviews'
-import CountryRatings from './CountryRatings'
-import Circle from './Circle'
+// import CountryRatings from './CountryRatings'
 import ForceGraph from './ForceGraph'
-import { select } from 'd3-selection'
-import { circleData, graphData, svgStyle } from '../utils/D3Utils'
+// import { select } from 'd3-selection'
+import { graphData } from '../utils/D3Utils'
+import GeoMap from './GeoMap'
 
 export default function Dashboard() {
   const theme = useTheme()
@@ -49,25 +49,19 @@ export default function Dashboard() {
   return (
     <>
       <Grid container spacing={2}>
-        {/* Ratings Chart */}
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <Paper className={fixedHeightPaper}>
             <CountryRatings />
           </Paper>
-        </Grid>
-        {/* User Count */}
+        </Grid> */}
         <Grid item xs={12}>
           <Paper className={fixedHeightPaper}>
             <ForceGraph data={graphData} />
           </Paper>
-          {/* <Paper className={fixedHeightPaper}>
-            <Circle data={[1, 2, 3]} />
-          </Paper> */}
         </Grid>
-        {/* Recent Reviews */}
         <Grid item xs={12}>
-          <Paper className={classes.paper}>
-            <RecentReviews />
+          <Paper className={fixedHeightPaper}>
+            <GeoMap />
           </Paper>
         </Grid>
       </Grid>

@@ -26,6 +26,8 @@ export interface GroupDatum {
 export interface INodes extends SimulationNodeDatum {
   id: string
   size: number
+  group?: number
+  type?: string
   label?: string
 }
 
@@ -43,4 +45,14 @@ export interface IGraph {
 export interface IDimension {
   width: number
   height: number
+}
+
+export interface IHealth {
+  country: string
+  hale: string
+}
+
+export interface IRating {
+  name: string
+  count: number
 }
