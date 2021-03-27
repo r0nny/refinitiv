@@ -3,15 +3,12 @@ import * as d3 from 'd3'
 import { IHealth, IGraph, StageProps, SVGDatum, ZoomProps } from './interfaces'
 import _ from 'lodash'
 import geojsonData from './countries-50m.json'
-import hale from './hale.json'
 
 const SVGContext = React.createContext(null)
 
 export const circleData: number[] = [20, 40, 30, 50, 70, 30]
 
 export const worldData: any = geojsonData
-
-export const haleData: IHealth[] = hale
 
 export const graphData: IGraph = {
   nodes: [
