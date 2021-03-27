@@ -4,12 +4,11 @@ import { Grid, Paper } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import clsx from 'clsx'
 
-import RecentReviews from './RecentReviews'
-// import CountryRatings from './CountryRatings'
 import ForceGraph from './ForceGraph'
 // import { select } from 'd3-selection'
 import { graphData } from '../utils/D3Utils'
 import GeoMap from './GeoMap'
+import CountryRatings from './CountryRatings'
 
 export default function Dashboard() {
   const theme = useTheme()
@@ -49,19 +48,19 @@ export default function Dashboard() {
   return (
     <>
       <Grid container spacing={2}>
-        {/* <Grid item xs={12}>
-          <Paper className={fixedHeightPaper}>
-            <CountryRatings />
-          </Paper>
-        </Grid> */}
         <Grid item xs={12}>
           <Paper className={fixedHeightPaper}>
-            <ForceGraph data={graphData} />
+            <CountryRatings />
           </Paper>
         </Grid>
         <Grid item xs={12}>
           <Paper className={fixedHeightPaper}>
             <GeoMap />
+          </Paper>
+        </Grid>
+        <Grid item xs={12}>
+          <Paper className={fixedHeightPaper}>
+            <ForceGraph data={graphData} />
           </Paper>
         </Grid>
       </Grid>

@@ -1,11 +1,5 @@
 import React, { useRef, useEffect } from 'react'
-import {
-  select,
-  geoPath,
-  scaleSequential,
-  interpolateYlGnBu,
-  geoMercator,
-} from 'd3'
+import { select, geoPath, geoMercator, scaleThreshold, schemeOranges } from 'd3'
 import { svgStyle, worldData } from '../utils/D3Utils'
 import { IDimension, IRating } from '../utils/interfaces'
 import * as topojson from 'topojson-client'
@@ -53,9 +47,9 @@ export default function GeoMap() {
     })
 
     console.log(`${_.keys(data).length} :  ${JSON.stringify(data)}`)
-    const color = scaleSequential()
-      .domain(_.values(data))
-      .interpolator(interpolateYlGnBu)
+    const color = scaleThreshold<number, string>()
+      .domain([100, 1000, 5000, 10000, 20000, 50000, 100000])
+      .range(schemeOranges[7])
       .unknown('#ccc')
 
     svg.style('display', 'block').attr('viewBox', [0, 0, width, height])
@@ -75,12 +69,7 @@ export default function GeoMap() {
       .selectAll('path')
       .data(countries.features)
       .join('path')
-      .attr('fill', (d: any) => {
-        if (!data[d.properties.name]) {
-          console.log('Missing: ', d.properties.name)
-        }
-        return color(data[d.properties.name])
-      })
+      .attr('fill', (d: any) => color(data[d.properties.name]))
       .attr('d', pathGenerator)
       .append('title')
       .text((d: any) => `${d.properties.name}`)
