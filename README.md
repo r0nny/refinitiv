@@ -1,22 +1,12 @@
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://grandstack.io/deploy-starter-netlify) [![Deploy to Vercel](https://vercel.com/button)](https://grandstack.io/deploy-starter-vercel) [![Provision Neo4j](https://grandstack.io/img/provision-neo4j.png)](https://sandbox.neo4j.com/?usecase=blank-sandbox)
 
-# GRANDstack Starter
+# Data Visualization for Paradise Paper Dataset
 
-```
-npx create-grandstack-app myNewApp
-```
-
-This project is a starter for building a [GRANDstack](https://grandstack.io) (GraphQL, React, Apollo, Neo4j Database) application. There are two components to the starter, the web frontend application (in React and Angular flavors) and the API app (GraphQL server).
-
-The starter represents a **business reviews dashboard**. You need to adjust the GraphQL schema, the seed data, database index creation, and the UI components for your use-case.
-
-[![Hands On With The GRANDstack Starter](http://img.youtube.com/vi/rPC71lUhK_I/0.jpg)](http://www.youtube.com/watch?v=1JLs166lPcA 'Hands On With The GRANDstack Starter')
-
-_Hands On With The GRANDstack Starter Video_
+This project is created from starter project template for building a [GRANDstack](https://grandstack.io) (GraphQL, React, Apollo, Neo4j Database) application. There are two components to the starter, the web frontend application (in React and Angular flavors) and the API app (GraphQL server).
 
 ## Quickstart
 
-The easiest way to get started with the GRANDstack Starter is to create a Neo4j Sandbox instance and use the `create-grandstack-app` command line tool.
+The easiest way to get started with the GRANDstack Starter is to create a Neo4j Sandbox instance and run the `npm install` command at both backend and frontend folder. Then run `npm start` to spin up both backend and frontend server.
 
 (If you have a running Neo4j database on localhost via Neo4j Desktop or a Neo4j server installation, change the password in `api/.env`)
 
@@ -44,23 +34,19 @@ And install the apoc plugin, green button at the top of the list.
 
 After that you can return to setting up your app with the credentials from the prior steps.
 
-### 2. Run the `create-grandstack-app` CLI
+### 2. Run the `npm install` script at both api and web-react-ts folders to install all required dependencies
 
 ```
-npx create-grandstack-app myNewApp
+cd api
+npm i
 ```
 
-or with Yarn
-
 ```
-yarn create grandstack-app myNewApp
+cd web-react-ts
+npm i
 ```
 
-![create grandstack app output](img/create-grandstack-app.png)
-
-This will create a new directory `myNewApp`, download the latest release of the GRANDstack Starter, install dependencies and prompt for your connection credentials for Neo4j to connect to the GraphQL API.
-
-### 3. Seed the database (optional)
+### 3. Seed the database by importing the paradise paper database using neo4j-admin tool
 
 Make sure your application is running locally with `npm start` or `yarn start`, open another terminal and run
 
@@ -74,7 +60,13 @@ or with Yarn
 yarn run seedDb
 ```
 
-### 4. Open In Browser
+### 4. Run npm start at root folder to start both api and front-end dev server
+
+```
+npm start
+```
+
+### 5. The homepage will be automatically opened in a Browser. Otherwise it can be opened at http://localhost:3000
 
 ![Grandstack app running in browser](img/grandstack-app.png)
 
@@ -132,28 +124,6 @@ It includes:
 - React router
 - Apollo Client / React Hooks
 - Create React App
-
-### [`/web-angular`](./web-angular)
-
-![](web-angular/img/angular-ui.jpg)
-
-A UI built with [Angular](https://angular.io), [Apollo](https://www.apollographql.com/docs/angular/) and the [Clarity Design System](https://clarity.design) is also available.
-
-_Start the Angular UI server_
-
-```
-cd ./web-angular && npm start
-```
-
-### [`/mobile_client_flutter`](./mobile_client_flutter)
-
-![](img/grandstack-flutter.png)
-
-A mobile client built with [Flutter](https://flutter.dev) which supports Android, iOS, and web. See the [README](./mobile_client_flutter/README.md) for detailed setup instructions.
-
-```
-cd ./mobile_client_flutter && flutter run
-```
 
 ### [`/web-react-ts`](./web-react-ts)
 
