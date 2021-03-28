@@ -6,7 +6,7 @@ This project is created from starter project template for building a [GRANDstack
 
 ## Quickstart
 
-The easiest way to get started with the GRANDstack Starter is to create a Neo4j Sandbox instance and use the `create-grandstack-app` command line tool.
+The easiest way to get started with the GRANDstack Starter is to create a Neo4j Sandbox instance and run the `npm install` command at both backend and frontend folder. Then run `npm start` to spin up both backend and frontend server.
 
 (If you have a running Neo4j database on localhost via Neo4j Desktop or a Neo4j server installation, change the password in `api/.env`)
 
