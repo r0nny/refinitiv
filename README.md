@@ -2,17 +2,7 @@
 
 # GRANDstack Starter
 
-```
-npx create-grandstack-app myNewApp
-```
-
-This project is a starter for building a [GRANDstack](https://grandstack.io) (GraphQL, React, Apollo, Neo4j Database) application. There are two components to the starter, the web frontend application (in React and Angular flavors) and the API app (GraphQL server).
-
-The starter represents a **business reviews dashboard**. You need to adjust the GraphQL schema, the seed data, database index creation, and the UI components for your use-case.
-
-[![Hands On With The GRANDstack Starter](http://img.youtube.com/vi/rPC71lUhK_I/0.jpg)](http://www.youtube.com/watch?v=1JLs166lPcA 'Hands On With The GRANDstack Starter')
-
-_Hands On With The GRANDstack Starter Video_
+This project is created from starter project template for building a [GRANDstack](https://grandstack.io) (GraphQL, React, Apollo, Neo4j Database) application. There are two components to the starter, the web frontend application (in React and Angular flavors) and the API app (GraphQL server).
 
 ## Quickstart
 
@@ -44,23 +34,19 @@ And install the apoc plugin, green button at the top of the list.
 
 After that you can return to setting up your app with the credentials from the prior steps.
 
-### 2. Run the `create-grandstack-app` CLI
+### 2. Run the `npm install` script at both api and web-react-ts folders to install all required dependencies
 
 ```
-npx create-grandstack-app myNewApp
+cd api
+npm i
 ```
 
-or with Yarn
-
 ```
-yarn create grandstack-app myNewApp
+cd web-react-ts
+npm i
 ```
 
-![create grandstack app output](img/create-grandstack-app.png)
-
-This will create a new directory `myNewApp`, download the latest release of the GRANDstack Starter, install dependencies and prompt for your connection credentials for Neo4j to connect to the GraphQL API.
-
-### 3. Seed the database (optional)
+### 3. Seed the database by importing the paradise paper database using neo4j-admin tool
 
 Make sure your application is running locally with `npm start` or `yarn start`, open another terminal and run
 
@@ -74,7 +60,13 @@ or with Yarn
 yarn run seedDb
 ```
 
-### 4. Open In Browser
+### 4. Run npm start at root folder to start both api and front-end dev server
+
+```
+npm start
+```
+
+### 5. The homepage will be automatically opened in a Browser. Otherwise it can be opened at http://localhost:3000
 
 ![Grandstack app running in browser](img/grandstack-app.png)
 
