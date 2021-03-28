@@ -48,16 +48,17 @@ npm i
 
 ### 3. Seed the database by importing the paradise paper database using neo4j-admin tool
 
-Make sure your application is running locally with `npm start` or `yarn start`, open another terminal and run
+Make sure to extract the datasets zip file into import folder before running following command
 
 ```
-npm run seedDb
-```
-
-or with Yarn
-
-```
-yarn run seedDb
+bin/neo4j-admin import --database=neo4j	\
+    --nodes=Officer=import/paradise_papers.nodes.officer.csv	\
+    --nodes=Entity=import/paradise_papers.nodes.entity.csv	\
+    --nodes=Address=import/paradise_papers.nodes.address.csv	\
+    --nodes=Intermediary=import/paradise_papers.nodes.intermediary.csv	\
+    --nodes=Other=import/paradise_papers.nodes.other.csv	\
+    --relationships=import/paradise_papers.edges.csv	\
+    --multiline-fields=true
 ```
 
 ### 4. Run npm start at root folder to start both api and front-end dev server
