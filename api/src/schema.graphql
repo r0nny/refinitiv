@@ -49,8 +49,8 @@ type RatingCount {
 }
 
 interface Basic {
-  node_id: ID!
-  name: String!
+  node_id: ID
+  name: String
   sourceID: String
   valid_until: String
 }
@@ -129,6 +129,16 @@ type RatingData {
   count: Int!
 }
 
+type Relation {
+  node_id: ID
+  name: String
+  sourceID: String
+  valid_until: String
+  address: String
+  ibcRUC: String
+  countries: String
+}
+
 type Mutation {
   mergeBusinessCategory(categories: [String!]!, businessId: ID!): Business
     @cypher(
@@ -166,5 +176,9 @@ type Query {
   bothOfficerAndIntermediary: [Intermediary]
     @cypher(
       statement: "MATCH (i:Intermediary)-[r:intermediary_of]->(e:Entity) RETURN i UNION MATCH (i2:Intermediary)-[r2:officer_of]->(e2:Entity) RETURN i2"
+    )
+  getRelationOfOfficers(first: String!, second: String!): [Relation]
+    @cypher(
+      statement: "MATCH (p1: Officer {name: $first}), (p2: Officer {name: $second}) MATCH p = shortestPath((p1)-[*]-(p2)) UNWIND nodes(p) as n RETURN distinct n"
     )
 }

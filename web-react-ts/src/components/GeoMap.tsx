@@ -8,7 +8,7 @@ import _ from 'lodash'
 import { useQuery, gql } from '@apollo/client'
 const GET_DATA_QUERY = gql`
   {
-    popularOfficers(first: 500) {
+    popularOfficers(first: 200) {
       name
       count
     }
@@ -23,7 +23,6 @@ export default function GeoMap() {
   const svgRef: any = useRef()
 
   const { loading, error, data: queryData } = useQuery(GET_DATA_QUERY)
-  // will be called initially and on every data change
   useEffect(() => {
     const svg: any = select(svgRef.current)
     const dimensions: IDimension = {
@@ -46,7 +45,7 @@ export default function GeoMap() {
       }
     })
 
-    console.log(`${_.keys(data).length} :  ${JSON.stringify(data)}`)
+    // console.log(`${_.keys(data).length} :  ${JSON.stringify(data)}`)
     const color = scaleThreshold<number, string>()
       .domain([100, 1000, 5000, 10000, 20000, 50000, 100000])
       .range(schemeOranges[7])

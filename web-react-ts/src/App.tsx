@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom'
 
-import UserList from './components/UserList'
+import OfficerList from './components/OfficerList'
 
 import clsx from 'clsx'
 import { makeStyles } from '@material-ui/core/styles'
@@ -204,7 +204,7 @@ export default function App() {
                 <ListItemIcon>
                   <PeopleIcon />
                 </ListItemIcon>
-                <ListItemText primary="Users" />
+                <ListItemText primary="Officers" />
               </ListItem>
             </Link>
           </List>
@@ -215,8 +215,8 @@ export default function App() {
           <Container maxWidth="lg" className={classes.container}>
             <Switch>
               <Route exact path="/" component={Dashboard} />
-              <Route exact path="/businesses" component={UserList} />
-              <Route exact path="/users" component={UserList} />
+              <Route exact path="/businesses" component={OfficerList} />
+              <Route exact path="/users" component={OfficerList} />
             </Switch>
 
             <Box pt={4}>

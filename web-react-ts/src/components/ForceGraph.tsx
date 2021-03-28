@@ -12,25 +12,86 @@ import {
 } from 'd3'
 import { svgStyle } from '../utils/D3Utils'
 import { IDimension, IGraph, INodes } from '../utils/interfaces'
+import _ from 'lodash'
 
-var color = scaleOrdinal(schemeCategory10)
+import { useQuery, gql } from '@apollo/client'
+import { Search } from '@material-ui/icons'
+
+const GET_DATA_QUERY = gql`
+  query GetRelationOfOfficers($first: String!, $second: String!) {
+    getRelationOfOfficers(first: $first, second: $second) {
+      name
+      address
+      ibcRUC
+      countries
+    }
+  }
+`
+const color = scaleOrdinal(schemeCategory10)
 
 interface ForceGrapProps {
-  data: IGraph
+  first: string
+  second: string
+  search: boolean
+  resetSearch: any
 }
 
 export default function ForceGraph(props: ForceGrapProps) {
   const svgRef: any = useRef()
 
-  // will be called initially and on every data change
+  const { loading, error, data: queryData } = useQuery(GET_DATA_QUERY, {
+    variables: {
+      first: props.first,
+      second: props.second,
+    },
+    skip: !props.search,
+  })
+
   useEffect(() => {
+    console.log('ForceGraph: ', JSON.stringify(props))
+
     const svg: any = select(svgRef.current)
     const dimensions: IDimension = {
       width: svgRef.current.clientWidth,
       height: svgRef.current.clientHeight,
     }
 
-    if (!dimensions?.width || !dimensions?.height) return
+    if (
+      !props.search ||
+      _.isEmpty(queryData) ||
+      !dimensions?.width ||
+      !dimensions?.height
+    )
+      return
+    const { width, height } = dimensions
+
+    const graphData: IGraph = {
+      nodes: [],
+      links: [],
+    }
+
+    queryData.getRelationOfOfficers.forEach((node: any, index: number) => {
+      const { ibcRUC, address, name } = node
+      const type = !_.isEmpty(ibcRUC)
+        ? 'ENTITY'
+        : !_.isEmpty(address)
+        ? 'ADDRESS'
+        : 'OFFICER'
+
+      graphData.nodes.push({
+        id: !_.isEmpty(address) ? address : name,
+        size: 20,
+        type,
+      })
+      if (index > 0) {
+        graphData.links.push({
+          source: graphData.nodes[index - 1].id,
+          target: graphData.nodes[index].id,
+        })
+      }
+    })
+
+    const { nodes, links } = graphData
 
     // add zoom capability
     // const zoomBehavior = zoom()
@@ -45,9 +106,6 @@ export default function ForceGraph(props: ForceGrapProps) {
     //   .scaleExtent([1, 4])
 
     // svg.call(zoomBehavior)
-
-    const { width, height } = dimensions
-    const { nodes, links } = props.data
 
     // draw links
     const link = svg
@@ -79,11 +137,12 @@ export default function ForceGraph(props: ForceGrapProps) {
       .append('text')
       .text((d: INodes) => (d.label ? d.label : d.id))
       .attr('fill', 'black')
-      .attr('dx', -10)
+      .attr('dx', -60)
+      .attr('dy', (d: any, i: number) => (i % 2 === 0 ? -55 : 55))
 
     // draw simulation
     const simulation = forceSimulation()
-      .force('charge', forceManyBody().strength(-500))
+      .force('charge', forceManyBody().strength(-1000))
       .force('center', forceCenter(width / 2, height / 2))
       .force(
         'collide',
@@ -137,7 +196,17 @@ export default function ForceGraph(props: ForceGrapProps) {
       d.fx = null
       d.fy = null
     }
-  }, [props.data])
 
-  return <svg ref={svgRef} style={svgStyle}></svg>
+    props.resetSearch()
+  }, [props, queryData])
+
+  if (error) console.log(error)
+
+  return (
+    <>
+      {props.search && loading && !error && <p>Loading...</p>}
+      {props.search && error && !loading && <p>Error</p>}
+      <svg ref={svgRef} style={svgStyle}></svg>
+    </>
+  )
 }
