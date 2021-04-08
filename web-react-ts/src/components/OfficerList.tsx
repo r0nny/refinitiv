@@ -17,6 +17,9 @@ const styles = (theme: Theme) =>
     grid: {
       padding: '2em',
     },
+    textField: {
+      minWidth: '300px',
+    },
   })
 
 function OfficerList(props: any) {

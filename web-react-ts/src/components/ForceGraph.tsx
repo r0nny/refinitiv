@@ -15,7 +15,6 @@ import { IDimension, IGraph, INodes } from '../utils/interfaces'
 import _ from 'lodash'
 
 import { useQuery, gql } from '@apollo/client'
-import { Search } from '@material-ui/icons'
 
 const GET_DATA_QUERY = gql`
   query GetRelationOfOfficers($first: String!, $second: String!) {
