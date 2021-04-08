@@ -106,6 +106,8 @@ export default function ForceGraph(props: ForceGrapProps) {
 
     // svg.call(zoomBehavior)
 
+    svg.selectAll('*').remove()
+
     // draw links
     const link = svg
       .append('g')
@@ -199,7 +201,7 @@ export default function ForceGraph(props: ForceGrapProps) {
     props.resetSearch()
   }, [props, queryData])
 
-  if (error) console.log(error)
+  if (error) console.error(error)
 
   return (
     <>
